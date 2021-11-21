@@ -87,21 +87,112 @@
     </section>
   </main>
 
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+                        
   <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "c8c2223eab2a4c36bc7fd2f1ab5abba9"
+      // for more configuration options, see https://docs.trackjs.com
+    });
     let form = document.querySelector('form');
+    class SubmitEventError extends Error{
+        constructor(message){
+            super(message);
+            this.name = 'SubmitEventError';
+        }
+    }
     form.addEventListener('submit', e => {
       e.preventDefault();
-      let output = document.querySelector('output');
-      let firstNum = document.querySelector('#first-num').value;
-      let secondNum = document.querySelector('#second-num').value;
-      let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      try {
+        let output = document.querySelector('output');
+        let firstNum = document.querySelector('#first-num').value;
+        let secondNum = document.querySelector('#second-num').value;
+        if (firstNum === '' && secondNum === ''){
+          throw new Error('No input');
+        }
+        if (firstNum === 'e' && secondNum === 'e'){
+          throw new SubmitEventError('Invalid input');
+        }
+        let operator = document.querySelector('#operator').value;
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      }
+      catch (err) {
+        alert(err.message);
+      }
+      finally {
+        alert('Completed');
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+
+    errorBtns[0].addEventListener('click', event => {
+      console.log('log');
+    });
+    errorBtns[1].addEventListener('click', event => {
+      console.error('error');
+    });
+    errorBtns[2].addEventListener('click', event => {
+      console.count();
+    });
+    errorBtns[3].addEventListener('click', event => {
+      console.warn('warn');
+    });
+    errorBtns[4].addEventListener('click', event => {
+      const x = 5;
+      const y = 10;
+      const reason = 'x is expected to be bigger than y';
+      console.assert(x > y, {x, y, reason});
+    });
+    errorBtns[5].addEventListener('click', event => {
+      console.clear();
+    });
+    errorBtns[6].addEventListener('click', event => {
+      console.dir(document.body);
+    });
+    errorBtns[7].addEventListener('click', event => {
+      console.dirxml(document);
+    });
+    const label = 'group';
+    errorBtns[8].addEventListener('click', event => {
+      console.group(label);
+    });
+    errorBtns[9].addEventListener('click', event => {
+      console.groupEnd(label);
+    });
+    errorBtns[10].addEventListener('click', event => {
+      console.table([
+        {
+          index: 0,
+          button: 'Console Log',
+        },
+        {
+          index: 1,
+          button: 'Console Error',
+        },
+      ]);
+    });
+    errorBtns[11].addEventListener('click', event => {
+      console.time();
+    });
+    errorBtns[12].addEventListener('click', event => {
+      console.timeEnd();
+    });
+    errorBtns[13].addEventListener('click', event => {
+      const trace = () => {
+        console.trace();
+      };
+      trace();
+    });
+    errorBtns[14].addEventListener('click', event => {
+      abc();
+    });
+    window.onerror = function(msg){
+      console.log(msg);
+    } 
   </script>
 </body>
 
